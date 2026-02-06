@@ -1,0 +1,1529 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat - Chat with 3+ Friends</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-card {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+        }
+
+        .logo i {
+            font-size: 4rem;
+            color: #6a11cb;
+            margin-bottom: 20px;
+        }
+
+        .logo h1 {
+            color: #333;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 600px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .option-card:hover {
+            border-color: #6a11cb;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(106, 17, 203, 0.1);
+        }
+
+        .option-card i {
+            font-size: 2.5rem;
+            color: #6a11cb;
+            margin-bottom: 15px;
+        }
+
+        .option-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .option-card p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 12px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .option-btn:hover {
+            background: #5a0cb3;
+        }
+
+        .form-card {
+            padding: 40px;
+            position: relative;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+
+        .back-btn:hover {
+            color: #333;
+        }
+
+        .form-card h2 {
+            color: #333;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #6a11cb;
+        }
+
+        .code-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .code-input input {
+            flex: 1;
+        }
+
+        .paste-btn {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .paste-btn:hover {
+            background: #e9ecef;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 8px;
+        }
+
+        .room-code-display {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .room-code-display h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .code-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .code-box span {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: #6a11cb;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 10px;
+            border: 2px dashed #6a11cb;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            padding: 15px 25px;
+            background: #6a11cb;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .copy-btn:hover {
+            background: #5a0cb3;
+        }
+
+        .create-btn,
+        .join-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: transform 0.3s;
+        }
+
+        .create-btn:hover,
+        .join-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .share-link {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f0f7ff;
+            border-radius: 12px;
+            border: 2px solid #cce0ff;
+        }
+
+        .share-link h4 {
+            color: #0066cc;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .link-box {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #99ccff;
+            color: #0066cc;
+            word-break: break-all;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .status.connecting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .room-info {
+            flex: 1;
+        }
+
+        .room-info h3 {
+            color: white;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .room-info p {
+            color: #bdc3c7;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .room-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            background: #34495e;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #3d566e;
+        }
+
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            padding: 20px 30px;
+            background: white;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .header-info h2 {
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .header-info p {
+            color: #27ae60;
+            font-size: 0.9rem;
+        }
+
+        .messages-container {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .system-message {
+            text-align: center;
+            padding: 15px;
+            background: #e9f7fe;
+            border-radius: 10px;
+            color: #0066cc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            position: relative;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid #e0e0e0;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .message-input-area {
+            padding: 20px 30px;
+            background: white;
+            border-top: 2px solid #f0f2f5;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            padding: 18px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #6a11cb;
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .emoji-btn,
+        .send-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .emoji-btn {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e0e0e0;
+        }
+
+        .emoji-btn:hover {
+            background: #e9ecef;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .typing-indicator {
+            height: 20px;
+            color: #666;
+            font-size: 0.9rem;
+            font-style: italic;
+            padding-left: 20px;
+        }
+
+        .emoji-picker {
+            position: absolute;
+            bottom: 100px;
+            right: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            z-index: 1000;
+        }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .emoji-grid span {
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .emoji-grid span:hover {
+            background: #f0f2f5;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 300px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .chat-container {
+                flex-direction: column;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .room-info {
+                flex: none;
+            }
+
+            .room-actions {
+                flex-direction: row;
+            }
+
+            .message {
+                max-width: 85%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .form-card {
+                padding: 25px;
+            }
+
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        .link-text {
+            word-break: break-all;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .connecting-status,
+        .success-status,
+        .error-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Welcome Screen -->
+    <div class="container" id="welcomeScreen">
+        <div class="welcome-card">
+            <div class="logo">
+                <i class="fas fa-users"></i>
+                <h1>Group Chat</h1>
+                <p>Chat with 3+ friends in real-time</p>
+            </div>
+
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-user-friends"></i>
+                    <span>3+ Friends</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Private</span>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <span>Fast</span>
+                </div>
+            </div>
+
+            <div class="options">
+                <div class="option-card" onclick="showCreateForm()">
+                    <i class="fas fa-plus-circle"></i>
+                    <h3>Create Group</h3>
+                    <p>Start new group chat</p>
+                    <button class="option-btn">Create</button>
+                </div>
+
+                <div class="option-card" onclick="showJoinForm()">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <h3>Join Group</h3>
+                    <p>Enter friend's code</p>
+                    <button class="option-btn">Join</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Room Form -->
+    <div class="container" id="createForm" style="display: none;">
+        <div class="form-card">
+            <button class="back-btn" onclick="showWelcome()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <h2><i class="fas fa-plus-circle"></i> Create Group</h2>
+
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" id="yourName" placeholder="Enter your name" maxlength="20">
+            </div>
+
+            <div class="room-code-display">
+                <h3>Group Code:</h3>
+                <div class="code-box">
+                    <span id="generatedCode">ABC123</span>
+                    <button onclick="copyCode()" class="copy-btn">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                </div>
+                <p class="hint">Share this code with friends</p>
+            </div>
+
+            <button class="create-btn" onclick="createRoom()">
+                <i class="fas fa-users"></i> Create Group
+            </button>
+
+            <div class="share-link">
+                <h4>Share invite link:</h4>
+                <div class="link-box" id="shareLinkBox">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Room Form -->
+    <div class="container" id="joinForm" style="display: none;">
+        <div class="form-card">
+            <button class="back-btn" onclick="showWelcome()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+
+            <h2><i class="fas fa-sign-in-alt"></i> Join Group</h2>
+
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" id="friendName" placeholder="Enter your name" maxlength="20">
+            </div>
+
+            <div class="input-group">
+                <label>Group Code</label>
+                <input type="text" id="roomCode" placeholder="Enter 6-digit code" maxlength="6"
+                    style="text-align: center; letter-spacing: 5px; font-size: 1.2rem;">
+                <p class="hint">Get code from friend</p>
+            </div>
+
+            <button class="join-btn" onclick="joinRoom()">
+                <i class="fas fa-door-open"></i> Join Group
+            </button>
+
+            <div class="status" id="joinStatus"></div>
+        </div>
+    </div>
+
+    <!-- Chat Room -->
+    <div class="chat-container" id="chatRoom" style="display: none;">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="room-info">
+                <h3><i class="fas fa-hashtag"></i> Group</h3>
+                <div class="room-code" id="roomCodeDisplay">ABC123</div>
+                <div class="user-count">
+                    <i class="fas fa-user"></i>
+                    <span id="onlineCount">1</span> online
+                </div>
+            </div>
+
+            <div class="users-list" id="usersList">
+                <!-- Users appear here -->
+            </div>
+
+            <div class="room-actions">
+                <button class="action-btn" onclick="copyInviteLink()">
+                    <i class="fas fa-link"></i> Copy Invite
+                </button>
+                <button class="action-btn" onclick="leaveRoom()">
+                    <i class="fas fa-sign-out-alt"></i> Leave
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat -->
+        <div class="main-chat">
+            <div class="chat-header">
+                <div>
+                    <h2><i class="fas fa-comments"></i> Group Chat</h2>
+                    <div class="connection-status" id="connectionStatus">Connected</div>
+                </div>
+            </div>
+
+            <div class="messages-container" id="messagesContainer">
+                <div class="welcome-message">
+                    <i class="fas fa-comment-dots"></i>
+                    <h3>Welcome to Group Chat!</h3>
+                    <p>Start chatting with friends</p>
+                </div>
+            </div>
+
+            <div class="message-input-area">
+                <div class="input-wrapper">
+                    <input type="text" id="messageInput" placeholder="Type a message..." autocomplete="off" disabled>
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()" disabled>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="typing-indicator" id="typingIndicator"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Socket.io -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        // ============================================
+        // COMPLETE GROUP CHAT SCRIPT
+        // ============================================
+
+        let socket = null;
+        const chatApp = {
+            myName: '',
+            myId: '',
+            roomCode: '',
+            isHost: false,
+            isConnected: false,
+            users: [],
+            messages: [],
+            isTyping: false,
+            typingUsers: new Set(),
+            typingTimeout: null
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('🚀 Group Chat initializing...');
+
+            // Generate user ID
+            chatApp.myId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+
+            // Load saved name
+            const savedName = localStorage.getItem('chatUsername');
+            if (savedName) {
+                chatApp.myName = savedName;
+                document.getElementById('yourName').value = savedName;
+                document.getElementById('friendName').value = savedName;
+            }
+
+            // Generate room code
+            generateRoomCode();
+
+            // Check URL for code
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            if (code) {
+                document.getElementById('roomCode').value = code.toUpperCase();
+            }
+
+            // Connect to server
+            connectToServer();
+
+            console.log('✅ Chat app ready');
+        });
+
+        function connectToServer() {
+            socket = io();
+
+            // Setup listeners
+            setupSocketListeners();
+            setupEventListeners();
+        }
+
+        function setupSocketListeners() {
+            // Connected
+            socket.on('connect', () => {
+                console.log('✅ Connected to server');
+                chatApp.isConnected = true;
+                updateConnectionStatus('Connected');
+            });
+
+            // Room created
+            socket.on('room-created', (data) => {
+                console.log('🎉 Room created:', data);
+
+                chatApp.roomCode = data.code;
+                chatApp.isHost = true;
+                chatApp.myName = data.hostName || chatApp.myName;
+                chatApp.users = data.users;
+
+                // Update UI
+                document.getElementById('roomCodeDisplay').textContent = data.code;
+                document.getElementById('generatedCode').textContent = data.code;
+                document.getElementById('myNameDisplay').textContent = chatApp.myName;
+
+                // Save name
+                localStorage.setItem('chatUsername', chatApp.myName);
+
+                // Update share link
+                updateShareLink();
+
+                // Show chat room
+                showChatRoom();
+
+                // Update user list
+                updateUsersList();
+
+                // Enable chat
+                enableChat();
+
+                // Add welcome message
+                addSystemMessage(`Group created! Code: ${data.code}. Share with friends.`);
+
+                showNotification('Group created!', 'success');
+            });
+
+            // Joined room
+            socket.on('room-joined', (data) => {
+                console.log('🎉 Joined room:', data);
+
+                chatApp.roomCode = data.room;
+                chatApp.isHost = false;
+                chatApp.users = data.users;
+
+                // Update UI
+                document.getElementById('roomCodeDisplay').textContent = data.room;
+
+                // Save name
+                localStorage.setItem('chatUsername', chatApp.myName);
+
+                // Show chat room
+                showChatRoom();
+
+                // Update user list
+                updateUsersList();
+
+                // Enable chat
+                enableChat();
+
+                // Clear join status
+                const statusDiv = document.getElementById('joinStatus');
+                if (statusDiv) {
+                    statusDiv.innerHTML = '';
+                    statusDiv.className = '';
+                }
+
+                // Load existing messages
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        const isSent = msg.senderId === socket.id;
+                        displayMessage(msg, isSent);
+                    });
+                }
+
+                // Add welcome message
+                addSystemMessage(`Joined ${data.hostName}'s group!`);
+
+                showNotification('Joined group!', 'success');
+            });
+
+            // User joined
+            socket.on('user-joined', (data) => {
+                console.log('👤 User joined:', data);
+
+                // Add user to list
+                const existingUser = chatApp.users.find(u => u.id === data.user.id);
+                if (!existingUser) {
+                    chatApp.users.push(data.user);
+                    updateUsersList();
+
+                    // Add system message
+                    addSystemMessage(`${data.user.name} joined the group`);
+                }
+            });
+
+            // User left
+            socket.on('user-left', (data) => {
+                console.log('👤 User left:', data);
+
+                // Remove user
+                chatApp.users = chatApp.users.filter(u => u.name !== data.name);
+                updateUsersList();
+
+                // Add system message
+                addSystemMessage(`${data.name} left the group`);
+            });
+
+            // Receive message
+            socket.on('receive-message', (message) => {
+                console.log('📨 Message received:', message);
+
+                // Display message
+                const isSent = message.senderId === socket.id;
+                displayMessage(message, isSent);
+
+                // Play sound for received messages
+                if (!isSent) {
+                    playMessageSound();
+                }
+            });
+
+            // Typing indicator
+            socket.on('user-typing', (data) => {
+                updateTypingIndicator(data.name, data.isTyping);
+            });
+
+            // Room error
+            socket.on('room-error', (error) => {
+                console.log('❌ Room error:', error);
+                showNotification(error, 'error');
+
+                const statusDiv = document.getElementById('joinStatus');
+                if (statusDiv) {
+                    statusDiv.innerHTML = `<div class="error-status"><i class="fas fa-times-circle"></i> ${error}</div>`;
+                    statusDiv.className = 'status error';
+                }
+
+                // Re-enable buttons
+                const joinBtn = document.querySelector('.join-btn');
+                if (joinBtn) {
+                    joinBtn.disabled = false;
+                    joinBtn.innerHTML = '<i class="fas fa-door-open"></i> Join Group';
+                }
+
+                const createBtn = document.querySelector('.create-btn');
+                if (createBtn) {
+                    createBtn.disabled = false;
+                    createBtn.innerHTML = '<i class="fas fa-users"></i> Create Group';
+                }
+            });
+
+            // Disconnected
+            socket.on('disconnect', () => {
+                console.log('❌ Disconnected from server');
+                chatApp.isConnected = false;
+                updateConnectionStatus('Disconnected');
+                showNotification('Disconnected from server', 'error');
+            });
+        }
+
+        function setupEventListeners() {
+            // Enter key for forms
+            document.getElementById('yourName').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') createRoom();
+            });
+
+            document.getElementById('friendName').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') joinRoom();
+            });
+
+            document.getElementById('roomCode').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') joinRoom();
+            });
+
+            // Message input
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+
+                messageInput.addEventListener('input', function () {
+                    handleTyping(true);
+                });
+            }
+
+            // Request notification permission
+            if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            }
+        }
+
+        // ============================================
+        // SCREEN NAVIGATION
+        // ============================================
+
+        function showWelcome() {
+            document.getElementById('welcomeScreen').style.display = 'block';
+            document.getElementById('createForm').style.display = 'none';
+            document.getElementById('joinForm').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'none';
+        }
+
+        function showCreateForm() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('createForm').style.display = 'block';
+            document.getElementById('joinForm').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'none';
+
+            generateRoomCode();
+            updateShareLink();
+            document.getElementById('yourName').focus();
+        }
+
+        function showJoinForm() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('createForm').style.display = 'none';
+            document.getElementById('joinForm').style.display = 'block';
+            document.getElementById('chatRoom').style.display = 'none';
+
+            document.getElementById('friendName').focus();
+        }
+
+        function showChatRoom() {
+            console.log('🚀 Showing chat room...');
+
+            // Hide all screens
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('createForm').style.display = 'none';
+            document.getElementById('joinForm').style.display = 'none';
+
+            // Show chat room
+            document.getElementById('chatRoom').style.display = 'flex';
+
+            console.log('✅ Chat room shown');
+        }
+
+        // ============================================
+        // ROOM MANAGEMENT
+        // ============================================
+
+        function generateRoomCode() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            chatApp.roomCode = code;
+            document.getElementById('generatedCode').textContent = code;
+            return code;
+        }
+
+        function copyCode() {
+            navigator.clipboard.writeText(chatApp.roomCode).then(() => {
+                showNotification('Code copied!', 'success');
+            });
+        }
+
+        function updateShareLink() {
+            const currentUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${currentUrl}?code=${chatApp.roomCode}`;
+            document.getElementById('shareLinkBox').innerHTML = `
+                <div class="link-text">${shareUrl}</div>
+                <button onclick="copyToClipboard('${shareUrl}')" style="margin-top: 10px; padding: 8px 15px; background: #0066cc; color: white; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+                    <i class="fas fa-copy"></i> Copy Link
+                </button>
+            `;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Copied!', 'success');
+            });
+        }
+
+        function copyInviteLink() {
+            const currentUrl = window.location.origin + window.location.pathname;
+            const shareUrl = `${currentUrl}?code=${chatApp.roomCode}`;
+            copyToClipboard(shareUrl);
+        }
+
+        // ============================================
+        // CREATE & JOIN ROOM
+        // ============================================
+
+        function createRoom() {
+            chatApp.myName = document.getElementById('yourName').value.trim();
+
+            if (!chatApp.myName) {
+                showNotification('Please enter your name', 'error');
+                return;
+            }
+
+            // Disable button
+            const createBtn = document.querySelector('.create-btn');
+            createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            createBtn.disabled = true;
+
+            console.log('📡 Creating room:', chatApp.myName);
+
+            // Send to server
+            socket.emit('create-room', {
+                name: chatApp.myName,
+                code: chatApp.roomCode
+            });
+        }
+
+        function joinRoom() {
+            chatApp.myName = document.getElementById('friendName').value.trim();
+            const joinCode = document.getElementById('roomCode').value.trim().toUpperCase();
+
+            if (!chatApp.myName) {
+                showNotification('Please enter your name', 'error');
+                return;
+            }
+
+            if (!joinCode || joinCode.length !== 6) {
+                showNotification('Please enter valid 6-digit code', 'error');
+                return;
+            }
+
+            // Disable button
+            const joinBtn = document.querySelector('.join-btn');
+            joinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Joining...';
+            joinBtn.disabled = true;
+
+            // Show status
+            const statusDiv = document.getElementById('joinStatus');
+            statusDiv.innerHTML = '<div class="connecting-status"><i class="fas fa-spinner fa-spin"></i> Joining group...</div>';
+            statusDiv.className = 'status connecting';
+
+            console.log('📡 Joining room:', joinCode);
+
+            // Send to server
+            socket.emit('join-room', {
+                room: joinCode,
+                name: chatApp.myName
+            });
+        }
+
+        // ============================================
+        // MESSAGING
+        // ============================================
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+
+            if (!text || !chatApp.isConnected) return;
+
+            // Create message
+            const message = {
+                text: text,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            };
+
+            // Display locally
+            const localMsg = {
+                sender: chatApp.myName,
+                senderId: socket.id,
+                text: text,
+                time: message.time,
+                type: 'message'
+            };
+            displayMessage(localMsg, true);
+
+            // Send to server
+            socket.emit('send-message', {
+                room: chatApp.roomCode,
+                message: message
+            });
+
+            // Clear input
+            input.value = '';
+            input.focus();
+
+            // Stop typing
+            handleTyping(false);
+        }
+
+        function displayMessage(message, isSent) {
+            const container = document.getElementById('messagesContainer');
+
+            // Remove welcome message if first real message
+            if (chatApp.messages.length === 0) {
+                const welcomeMsg = container.querySelector('.welcome-message');
+                if (welcomeMsg) {
+                    welcomeMsg.style.display = 'none';
+                }
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+
+            // Make URLs clickable
+            const textWithLinks = message.text.replace(
+                /(https?:\/\/[^\s]+)/g,
+                '<a href="$1" target="_blank" style="color: inherit; text-decoration: underline;">$1</a>'
+            );
+
+            messageDiv.innerHTML = `
+                <div class="message-text">${textWithLinks}</div>
+                <div class="message-info">
+                    <span>${isSent ? 'You' : message.sender}</span>
+                    <span>${message.time}</span>
+                </div>
+            `;
+
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+
+            // Store message
+            chatApp.messages.push(message);
+        }
+
+        function addSystemMessage(text) {
+            const container = document.getElementById('messagesContainer');
+            const systemDiv = document.createElement('div');
+            systemDiv.className = 'message system';
+            systemDiv.innerHTML = `
+                <div class="message-text">
+                    <i class="fas fa-info-circle"></i> ${text}
+                </div>
+            `;
+            container.appendChild(systemDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ============================================
+        // TYPING INDICATORS
+        // ============================================
+
+        function handleTyping(isTyping) {
+            if (!chatApp.isConnected || !chatApp.roomCode) return;
+
+            chatApp.isTyping = isTyping;
+
+            // Send to server
+            socket.emit('typing', {
+                room: chatApp.roomCode,
+                isTyping: isTyping
+            });
+
+            // Clear timeout
+            if (chatApp.typingTimeout) {
+                clearTimeout(chatApp.typingTimeout);
+            }
+
+            // Auto-stop after 3 seconds
+            if (isTyping) {
+                chatApp.typingTimeout = setTimeout(() => {
+                    handleTyping(false);
+                }, 3000);
+            }
+        }
+
+        function updateTypingIndicator(name, isTyping) {
+            const indicator = document.getElementById('typingIndicator');
+
+            if (isTyping) {
+                chatApp.typingUsers.add(name);
+            } else {
+                chatApp.typingUsers.delete(name);
+            }
+
+            if (chatApp.typingUsers.size > 0) {
+                const names = Array.from(chatApp.typingUsers);
+                if (names.length === 1) {
+                    indicator.textContent = `${names[0]} is typing...`;
+                } else if (names.length === 2) {
+                    indicator.textContent = `${names[0]} and ${names[1]} are typing...`;
+                } else {
+                    indicator.textContent = `${names.length} people are typing...`;
+                }
+            } else {
+                indicator.textContent = '';
+            }
+        }
+
+        // ============================================
+        // USER LIST MANAGEMENT
+        // ============================================
+
+        function updateUsersList() {
+            const usersList = document.getElementById('usersList');
+            const onlineCount = document.getElementById('onlineCount');
+
+            // Clear list
+            usersList.innerHTML = '';
+
+            // Update count
+            onlineCount.textContent = chatApp.users.length;
+
+            // Add each user
+            chatApp.users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = `user-item ${user.isHost ? 'host' : ''}`;
+
+                userItem.innerHTML = `
+                    <div class="avatar">${user.name.charAt(0).toUpperCase()}</div>
+                    <div class="user-name">${user.name} ${user.isHost ? '(Host)' : ''}</div>
+                    <div class="user-status"></div>
+                `;
+
+                usersList.appendChild(userItem);
+            });
+        }
+
+        function enableChat() {
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+            document.getElementById('messageInput').focus();
+            updateConnectionStatus('Connected');
+        }
+
+        function updateConnectionStatus(status) {
+            document.getElementById('connectionStatus').textContent = status;
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function playMessageSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Audio not supported');
+            }
+        }
+
+        // ============================================
+        // CLEANUP
+        // ============================================
+
+        function leaveRoom() {
+            if (confirm('Leave this group chat?')) {
+                // Reset
+                chatApp.myName = '';
+                chatApp.roomCode = '';
+                chatApp.isHost = false;
+                chatApp.users = [];
+                chatApp.messages = [];
+
+                // Show welcome
+                showWelcome();
+
+                // Clear URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+
+                showNotification('Left the group', 'info');
+            }
+        }
+
+        // ============================================
+        // GLOBAL FUNCTIONS
+        // ============================================
+
+        window.showWelcome = showWelcome;
+        window.showCreateForm = showCreateForm;
+        window.showJoinForm = showJoinForm;
+        window.createRoom = createRoom;
+        window.joinRoom = joinRoom;
+        window.copyCode = copyCode;
+        window.copyInviteLink = copyInviteLink;
+        window.copyToClipboard = copyToClipboard;
+        window.sendMessage = sendMessage;
+        window.leaveRoom = leaveRoom;
+    </script>
+</body>
+
+</html>
